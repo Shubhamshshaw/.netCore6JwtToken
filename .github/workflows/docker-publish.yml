@@ -1,28 +1,38 @@
-name: .NET Core CI/CD 
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'
+      
+    - name: Restore dependencies and build
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-
-      - name: Build and push Docker image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker build -t shawshubham24/jwt-demo-app:latest .
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push shawshubham24/jwt-demo-app:latest
+    - name: Push to GitLab
+      run: |
+        git remote add gitlab https://gitlab.com/dotnetcore2181108/JwtImpl.git
+        git push gitlab main
