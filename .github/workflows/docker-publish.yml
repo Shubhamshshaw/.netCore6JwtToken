@@ -23,6 +23,6 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker build -t jwt-demo-app:latest .
+          docker build -t shawshubham24/jwt-demo-app:latest .
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker push shawshubham24/jwt-demo-app:latest
