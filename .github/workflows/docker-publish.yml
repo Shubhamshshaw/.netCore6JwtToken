@@ -25,4 +25,4 @@ jobs:
         run: |
           docker build -t jwt-demo-app:latest .
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker push jwt-demo-app:latest
+          docker push shawshubham24/jwt-demo-app:latest
